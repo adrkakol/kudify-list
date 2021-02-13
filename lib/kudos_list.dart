@@ -1,134 +1,127 @@
 import 'package:flutter/material.dart';
+import 'package:lists/mocks.dart';
+import 'package:lists/models/kudos.dart';
+import 'package:lists/models/reward.dart';
 import 'package:lists/theme_colors.dart';
 
 class KudosList extends StatelessWidget {
-  final _backgroundRatio = 296 / 973; // height divided by width
+  static const int _backgroundWidth = 973;
+  static const int _backgroundHeight = 296;
+  final double _backgroundRatio = _backgroundHeight / _backgroundWidth;
 
-  final List<Map> recentKudoses = [
-    {
-      "recipient": {
-        "name": "Mike",
-      },
-      "sender": {"name": "Michalina", "avatarUrl": "assets/images/avatar1.png"},
-      "description":
-          "Many thanks for helping me with the broken internet connection"
-    },
-    {
-      "recipient": {
-        "name": "Karolina",
-      },
-      "sender": {"name": "Adi", "avatarUrl": "assets/images/avatar2.png"},
-      "description": "Kudos for a well prepared designs. I really like them"
-    },
-    {
-      "recipient": {
-        "name": "Karolina",
-      },
-      "sender": {"name": "Karolina", "avatarUrl": "assets/images/avatar3.png"},
-      "description":
-          "Kudos for a great presentation during the last meeting with the team"
-    },
-    {
-      "recipient": {
-        "name": "Robert",
-      },
-      "sender": {"name": "Lukas", "avatarUrl": "assets/images/avatar4.png"},
-      "description": "Well prepared videos! Keep it going :)"
-    },
-    {
-      "recipient": {
-        "name": "Adi",
-      },
-      "sender": {"name": "Thomas", "avatarUrl": "assets/images/avatar2.png"},
-      "description":
-          "For the delicious coffee and doughnuts we grabbed recently together"
-    },
-    {
-      "recipient": {
-        "name": "Przemek",
-      },
-      "sender": {"name": "Jake", "avatarUrl": "assets/images/avatar6.png"},
-      "description": "KUDOS for taking the ovnership during our last meeting"
-    },
-    {
-      "recipient": {
-        "name": "Rafał",
-      },
-      "sender": {"name": "Elizabeth", "avatarUrl": "assets/images/avatar3.png"},
-      "description": "For keeping an eye on our web page, many thanks!"
-    },
-  ];
+  final BorderSide _tileBorder = BorderSide(
+    color: ThemeColors.tileBorderColor,
+  );
 
-  final List<Map<String, String>> rewards = [
-    {"name": "Butterbeer", "image": "assets/images/beer-bottle.png"},
-    {"name": "Dragon's egg", "image": "assets/images/dragon.png"},
-    {"name": "Toss a coin", "image": "assets/images/coin.png"},
-  ];
+  Widget _buildListSubtitle(String subtitle) {
+    const TextStyle _subHeaderTextStyle = TextStyle(
+      color: ThemeColors.mainFontColor,
+      decoration: TextDecoration.none,
+      fontSize: 14.0,
+      fontWeight: FontWeight.w800,
+    );
 
-  Widget _buildTile(Map kudos) {
-    final _userNameStyle =
-        TextStyle(fontWeight: FontWeight.bold, color: ThemeColors.gray64);
-
-    return Card(
-      elevation: 0,
-      margin: EdgeInsets.only(bottom: 12, left: 16, right: 16),
-      shape: RoundedRectangleBorder(
-          side: BorderSide(width: 1, color: ThemeColors.gray223),
-          borderRadius: BorderRadius.circular(6)),
-      child: ListTile(
-          leading: Image.asset(
-            kudos["sender"]["avatarUrl"],
-            height: 50,
-          ),
-          contentPadding:
-              EdgeInsets.only(top: 12, bottom: 12, left: 16, right: 16),
-          title: Row(children: [
-            Text(
-              kudos["sender"]["name"].toUpperCase(),
-              style: _userNameStyle,
-            ),
-            Padding(
-                padding: EdgeInsets.only(left: 8, right: 8),
-                child: Image.asset(
-                  "assets/images/arrow.png",
-                  height: 12,
-                )),
-            Text(kudos["recipient"]["name"].toUpperCase(),
-                style: _userNameStyle),
-          ]),
-          subtitle: Padding(
-              padding: EdgeInsets.only(top: 10),
-              child: Text(kudos["description"],
-                  maxLines: 1, overflow: TextOverflow.ellipsis))),
+    return Padding(
+      padding: EdgeInsets.only(top: 30.0, left: 16.0, bottom: 10.0),
+      child: Text(subtitle, style: _subHeaderTextStyle),
     );
   }
 
-  Widget _buildRewardTile(Map<String, String> reward, bool hasLeftMargin) {
+  Widget _buildRewardListTile(Reward reward, bool hasLeftMargin) {
     return Card(
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-            side: BorderSide(color: ThemeColors.gray223, width: 1),
-            borderRadius: BorderRadius.circular(6)),
-        margin: EdgeInsets.only(left: hasLeftMargin ? 16 : 0, right: 16),
-        child: Container(
-            width: 200.0,
-            child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(children: [
-                  SizedBox(height: 10),
-                  Image.asset(
-                    reward["image"],
-                    height: 50,
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    reward["name"],
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: ThemeColors.gray64),
-                  )
-                ]))));
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        side: _tileBorder,
+        borderRadius: BorderRadius.circular(6.0),
+      ),
+      margin: EdgeInsets.only(
+        left: hasLeftMargin ? 16.0 : 0.0,
+        right: 16.0,
+      ),
+      child: Container(
+        width: 150.0,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              SizedBox(height: 10.0),
+              Image.asset(
+                reward.imageUrl,
+                height: 50.0,
+              ),
+              SizedBox(height: 10.0),
+              Text(
+                reward.name,
+                style: TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.bold,
+                  color: ThemeColors.mainFontColor,
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildKudosListTile(Kudos kudos) {
+    const TextStyle _personNameTextStyle = TextStyle(
+      fontWeight: FontWeight.bold,
+      color: ThemeColors.mainFontColor,
+    );
+
+    return Card(
+      elevation: 0.0,
+      margin: const EdgeInsets.only(
+        bottom: 12.0,
+        left: 16.0,
+        right: 16.0,
+      ),
+      shape: RoundedRectangleBorder(
+        side: _tileBorder,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: ListTile(
+        leading: Image.asset(
+          kudos.sender.avatarUrl,
+          height: 50.0,
+        ),
+        contentPadding: const EdgeInsets.only(
+          top: 12.0,
+          bottom: 12.0,
+          left: 16.0,
+          right: 16.0,
+        ),
+        title: Row(
+          children: [
+            Text(
+              kudos.sender.name.toUpperCase(),
+              style: _personNameTextStyle,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+              child: Image.asset(
+                "assets/images/arrow.png",
+                height: 12.0,
+              ),
+            ),
+            Text(
+              kudos.recipient.name.toUpperCase(),
+              style: _personNameTextStyle,
+            ),
+          ],
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 10.0),
+          child: Text(
+            kudos.description,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -136,72 +129,58 @@ class KudosList extends StatelessWidget {
     final double _width = MediaQuery.of(context).size.width;
 
     return Container(
-        color: Colors.white,
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              elevation: 0,
-              pinned: true,
-              backgroundColor: Colors.white,
+      color: Colors.white,
+      child: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            elevation: 0,
+            pinned: true,
+            backgroundColor: Colors.white,
+            centerTitle: true,
+            expandedHeight: _width * _backgroundRatio + 20.0,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(
+                "KUDOS WALL",
+                style: const TextStyle(
+                  color: ThemeColors.mainFontColor,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 20.0,
+                ),
+              ),
+              titlePadding: const EdgeInsets.only(bottom: 8.0),
               centerTitle: true,
-              expandedHeight: _width * _backgroundRatio + 20,
-              flexibleSpace: FlexibleSpaceBar(
-                title: Text(
-                  "KUDOS WALL",
-                  style: TextStyle(
-                      color: ThemeColors.gray64,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                ),
-                titlePadding: EdgeInsets.only(bottom: 8),
-                centerTitle: true,
-                background: Image.asset(
-                  'assets/images/background.png',
-                  fit: BoxFit.fitWidth,
-                  alignment: Alignment.topCenter,
-                ),
+              background: Image.asset(
+                'assets/images/background.png',
+                fit: BoxFit.fitWidth,
+                alignment: Alignment.topCenter,
               ),
             ),
-            SliverToBoxAdapter(
-                child: Padding(
-              padding: EdgeInsets.only(top: 20, left: 16, bottom: 8),
-              child: Text("PICK A REWARD",
-                  style: TextStyle(
-                    color: ThemeColors.gray64,
-                    fontSize: 14,
-                    decoration: TextDecoration.none,
-                  )),
-            )),
-            SliverToBoxAdapter(
-              child: Container(
-                height: 120.0,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: rewards.length,
-                  itemBuilder: (context, index) {
-                    final _hasLeftPadding = index == 0;
-                    return _buildRewardTile(rewards[index], _hasLeftPadding);
-                  },
-                ),
+          ),
+          SliverToBoxAdapter(child: _buildListSubtitle("PICK A REWARD")),
+          SliverToBoxAdapter(
+            child: Container(
+              height: 120.0,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: Mocks.rewards.length,
+                itemBuilder: (_, index) {
+                  bool hasLeftMargin = index == 0;
+                  Reward reward = Mocks.rewards[index];
+
+                  return _buildRewardListTile(reward, hasLeftMargin);
+                },
               ),
             ),
-            SliverToBoxAdapter(
-                child: Padding(
-              padding: EdgeInsets.only(top: 28, left: 16, bottom: 8),
-              child: Text("BROWSE KUDOSES",
-                  style: TextStyle(
-                    color: ThemeColors.gray64,
-                    fontSize: 14,
-                    decoration: TextDecoration.none,
-                  )),
-            )),
-            SliverList(
-              delegate:
-                  SliverChildBuilderDelegate((BuildContext context, int index) {
-                return _buildTile(recentKudoses[index]);
-              }, childCount: recentKudoses.length),
-            )
-          ],
-        ));
+          ),
+          SliverToBoxAdapter(child: _buildListSubtitle("BROWSE KUDOSES")),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (_, int index) => _buildKudosListTile(Mocks.recentKudoses[index]),
+              childCount: Mocks.recentKudoses.length,
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

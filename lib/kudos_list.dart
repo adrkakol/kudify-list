@@ -2,38 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:lists/mocks.dart';
 import 'package:lists/models/kudos.dart';
 import 'package:lists/models/reward.dart';
-import 'package:lists/theme_colors.dart';
 
 class KudosList extends StatelessWidget {
   static const int _backgroundWidth = 973;
   static const int _backgroundHeight = 296;
   final double _backgroundRatio = _backgroundHeight / _backgroundWidth;
 
-  final BorderSide _tileBorder = BorderSide(
-    color: ThemeColors.tileBorderColor,
-  );
-
-  Widget _buildListSubtitle(String subtitle) {
-    const TextStyle _subHeaderTextStyle = TextStyle(
-      color: ThemeColors.mainFontColor,
-      decoration: TextDecoration.none,
-      fontSize: 14.0,
-      fontWeight: FontWeight.w800,
-    );
-
+  Widget _buildListSubtitle(BuildContext context, String subtitle) {
     return Padding(
-      padding: EdgeInsets.only(top: 30.0, left: 16.0, bottom: 10.0),
-      child: Text(subtitle, style: _subHeaderTextStyle),
+      padding: const EdgeInsets.only(top: 30.0, left: 16.0, bottom: 10.0),
+      child: Text(
+        subtitle,
+        style: Theme.of(context).textTheme.headline2,
+      ),
     );
   }
 
-  Widget _buildRewardListTile(Reward reward, bool hasLeftMargin) {
+  Widget _buildRewardListTile(BuildContext context, int index) {
+    bool hasLeftMargin = index == 0;
+    Reward reward = Mocks.rewards[index];
+
     return Card(
       elevation: 0,
-      shape: RoundedRectangleBorder(
-        side: _tileBorder,
-        borderRadius: BorderRadius.circular(6.0),
-      ),
       margin: EdgeInsets.only(
         left: hasLeftMargin ? 16.0 : 0.0,
         right: 16.0,
@@ -52,11 +42,7 @@ class KudosList extends StatelessWidget {
               SizedBox(height: 10.0),
               Text(
                 reward.name,
-                style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.bold,
-                  color: ThemeColors.mainFontColor,
-                ),
+                style: Theme.of(context).textTheme.headline3,
               )
             ],
           ),
@@ -65,11 +51,8 @@ class KudosList extends StatelessWidget {
     );
   }
 
-  Widget _buildKudosListTile(Kudos kudos) {
-    const TextStyle _personNameTextStyle = TextStyle(
-      fontWeight: FontWeight.bold,
-      color: ThemeColors.mainFontColor,
-    );
+  Widget _buildKudosListTile(BuildContext context, int index) {
+    final Kudos kudos = Mocks.recentKudoses[index];
 
     return Card(
       elevation: 0.0,
@@ -77,10 +60,6 @@ class KudosList extends StatelessWidget {
         bottom: 12.0,
         left: 16.0,
         right: 16.0,
-      ),
-      shape: RoundedRectangleBorder(
-        side: _tileBorder,
-        borderRadius: BorderRadius.circular(6),
       ),
       child: ListTile(
         leading: Image.asset(
@@ -97,7 +76,7 @@ class KudosList extends StatelessWidget {
           children: [
             Text(
               kudos.sender.name.toUpperCase(),
-              style: _personNameTextStyle,
+              style: Theme.of(context).textTheme.subtitle1,
             ),
             Padding(
               padding: const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -108,7 +87,7 @@ class KudosList extends StatelessWidget {
             ),
             Text(
               kudos.recipient.name.toUpperCase(),
-              style: _personNameTextStyle,
+              style: Theme.of(context).textTheme.subtitle1,
             ),
           ],
         ),
@@ -126,7 +105,7 @@ class KudosList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double _width = MediaQuery.of(context).size.width;
+    final double _deviceWidth = MediaQuery.of(context).size.width;
 
     return Container(
       color: Colors.white,
@@ -137,15 +116,11 @@ class KudosList extends StatelessWidget {
             pinned: true,
             backgroundColor: Colors.white,
             centerTitle: true,
-            expandedHeight: _width * _backgroundRatio + 20.0,
+            expandedHeight: _deviceWidth * _backgroundRatio + 20.0,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
                 "KUDOS WALL",
-                style: const TextStyle(
-                  color: ThemeColors.mainFontColor,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 20.0,
-                ),
+                style: Theme.of(context).textTheme.headline1,
               ),
               titlePadding: const EdgeInsets.only(bottom: 8.0),
               centerTitle: true,
@@ -156,26 +131,24 @@ class KudosList extends StatelessWidget {
               ),
             ),
           ),
-          SliverToBoxAdapter(child: _buildListSubtitle("PICK A REWARD")),
+          SliverToBoxAdapter(
+              child: _buildListSubtitle(context, "PICK A REWARD")),
           SliverToBoxAdapter(
             child: Container(
               height: 120.0,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: Mocks.rewards.length,
-                itemBuilder: (_, index) {
-                  bool hasLeftMargin = index == 0;
-                  Reward reward = Mocks.rewards[index];
-
-                  return _buildRewardListTile(reward, hasLeftMargin);
-                },
+                itemBuilder: (_, int index) =>
+                    _buildRewardListTile(context, index),
               ),
             ),
           ),
-          SliverToBoxAdapter(child: _buildListSubtitle("BROWSE KUDOSES")),
+          SliverToBoxAdapter(
+              child: _buildListSubtitle(context, "BROWSE KUDOSES")),
           SliverList(
             delegate: SliverChildBuilderDelegate(
-              (_, int index) => _buildKudosListTile(Mocks.recentKudoses[index]),
+              (_, int index) => _buildKudosListTile(context, index),
               childCount: Mocks.recentKudoses.length,
             ),
           )

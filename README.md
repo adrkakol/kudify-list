@@ -1,16 +1,42 @@
-# kudos_wall
+# lists
 
-A new Flutter project.
+List project for a blog episode.
+Shows usage of silver lists and silver app bar.
 
-## Getting Started
+TODO subjects to mention in the post:
 
-This project is a starting point for a Flutter application.
+1. types of builders
+https://api.flutter.dev/flutter/widgets/SliverChildListDelegate-class.html
+for expicitly stated number of items
 
-A few resources to get you started if this is your first Flutter project:
+instead: SliverChildBuilderDelegate https://api.flutter.dev/flutter/widgets/SliverChildBuilderDelegate-class.html for long lists
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+"Many slivers lazily construct their box children to avoid creating more children than are visible through the Viewport"
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+2. Automatic initialisers in dart:
+https://dart.academy/creating-objects-and-classes-in-dart-and-flutter/
+
+```
+class Point {
+  int x;
+  int y;
+  
+  Point(int x, int y) {
+    this.x = x;
+    this.y = y;
+  }
+}
+
+// VS
+
+class Point {
+  int x;
+  int y;
+
+  Point(this.x, this.y);
+}
+```
+
+3. Story about theming with ThemeData
+https://flutter.dev/docs/cookbook/design/themes
